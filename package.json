@@ -1,0 +1,38 @@
+{
+    "name": "browserify-engine",
+    "version": "1.0.0",
+    "description": "Three Game Engine con demo",
+    "main": "index.js",
+    "scripts": {
+        "build": "browserify src/main.js -o dist/bundle.js",
+        "watch": "watchify src/main.js -o dist/bundle.js",
+        "start": "node server.js",
+        "dev": "nodemon server.js"
+    },
+    "author": "Jose Antonio Parga Tolano",
+    "license": "ISC",
+    "dependencies": {
+        "bcrypt": "^5.0.0",
+        "body-parser": "^1.19.0",
+        "browserify": "^17.0.0",
+        "config": "^3.3.2",
+        "cors": "^2.8.5",
+        "express": "^4.17.1",
+        "jsonwebtoken": "^8.5.1",
+        "mongoose": "^5.10.13",
+        "path": "^0.12.7",
+        "physijs-browserify": "0.0.2",
+        "socket.io": "^3.0.1",
+        "socket.io-client": "^3.0.1",
+        "three": "^0.122.0",
+        "three-fbx-loader": "^1.0.3",
+        "three-gltf-loader": "^1.111.0",
+        "three-pointer-lock-controls": "^1.0.0",
+        "uuid": "^8.3.1"
+    },
+    "devDependencies": {
+        "browsify": "0.0.4",
+        "nodemon": "^2.0.6",
+        "watchify": "^3.11.1"
+    }
+}
