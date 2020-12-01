@@ -25,7 +25,7 @@ app.use(bodyParser.json({extended:true}));
 
 connectDB();
 
-app.use(express.static(path.join(__dirname,'dist')));
+app.use(express.static('./dist'));
 
 
 const queue = [];
@@ -100,7 +100,11 @@ io.on('connection', (socket) => {
 
 app.use( require('./routes/player.routes'));
 app.use( require('./routes/match.routes' ));
-
+/*
+app.get('/',(res,req)=>{
+  res.sendFile('./dist/index.html', )
+});
+*/
 //        "build": "browserify src/main.js -o dist/bundle.js", "watch": "watchify src/main.js -o dist/bundle.js", AGREGAR A SCRIPTS MIENTRAS DESARROLLAS
 http.listen( process.env.PORT, () => {
   console.log(`listening on *:${process.env.PORT}`);
