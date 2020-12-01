@@ -78,9 +78,9 @@ io.on('connection', (socket) => {
 
   // give each socket a random identifier so that we can determine who is who when
   // we're sending messages back and forth!
-  id = socket.id;
-  player_id = uuid();
-  room = "GameRoom"+Date.now();
+  let id = socket.id;
+  let player_id = uuid();
+  let room = "GameRoom"+Date.now();
 
   socket.join(defaultRoom);
 
@@ -101,6 +101,7 @@ io.on('connection', (socket) => {
 app.use( require('./routes/player.routes'));
 app.use( require('./routes/match.routes' ));
 
-http.listen( process.env.PORT, process.env.HOST, () => {
+//        "build": "browserify src/main.js -o dist/bundle.js", "watch": "watchify src/main.js -o dist/bundle.js", AGREGAR A SCRIPTS MIENTRAS DESARROLLAS
+http.listen( process.env.PORT, () => {
   console.log(`listening on *:${process.env.PORT}`);
 });

@@ -4,8 +4,6 @@
     "description": "Three Game Engine con demo",
     "main": "index.js",
     "scripts": {
-        "build": "browserify src/main.js -o dist/bundle.js",
-        "watch": "watchify src/main.js -o dist/bundle.js",
         "start": "node server.js",
         "dev": "nodemon server.js"
     },
