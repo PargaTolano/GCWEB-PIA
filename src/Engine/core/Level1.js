@@ -37,17 +37,20 @@ class Level1 extends Level {
             pMesh.receiveShadow = true;
             pMesh.castShadow = true;
             pMesh.frustumCulled = false;
-
+            pMesh.renderOrder = 10;
+            pMesh.material.depthTest= false;
             //envMap
             let cubemap = new THREE.CubeTextureLoader().setPath( 'resources/textures/cube_cosmic/' ) .load( [ 'px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg' ] );
-            
+            this.scene.background = cubemap;
+
             pMesh2.material.envMap = cubemap;
             pMesh2.material.side = THREE.DoubleSide;
             pMesh2.receiveShadow = true;
             pMesh2.castShadow = true;
             pMesh2.frustumCulled = false;
             
-            
+            character.scene;
+            character.scene.renderOrder = 10;
             
             this.objectsMap['character']  = character.scene;//.getObjectByName('Armature');
             //character.scene.clone(new THREE.Scene());//
@@ -59,6 +62,10 @@ class Level1 extends Level {
                     enemyMeshes.push(obj3d);
                 }
             })
+
+            let staples = await loadGLTF('/resources/assets/staple.glb');
+            this.objectsMap['staple'] = staples.scene.getObjectByName("Staple").clone();
+            this.objectsMap['staple'].scale.set(4,4,4);
 
             /* AUDIO
             const listener = new THREE.AudioListener();
@@ -126,11 +133,17 @@ class Level1 extends Level {
         enemyModelGameObject.addComponent(enemyModelBehaviour);
         this.scene.add(enemyMesh);
         
-        //this.scene.add(this.objectsMap['character']);
-        
         //comportamiento de disparo
         let shootingGameObject = new GameObject(this);
-        let shootingComponent  = new Shooting(shootingGameObject, this.objectsMap['main_camera'], this.objectsMap['bounds']);
+        let shootingComponent  = new Shooting(
+            shootingGameObject, 
+            this.objectsMap['main_camera'],
+            this.objectsMap['bounds'],
+            this.objectsMap['main_camera'],
+            this.objectsMap['staple'],
+            this.gameObjects,
+            this.scene
+        );
         shootingGameObject.addComponent(shootingComponent);
         
         //Listener de la conexion
@@ -161,7 +174,6 @@ class Level1 extends Level {
         let crosshair = new THREE.Mesh(crosshairgeometry, crosshairmaterial);
 
         this.uiscene.add(crosshair);
-
 
         this.gameObjects.push(
             playerGameObject,

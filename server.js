@@ -73,39 +73,48 @@ const leaveRooms = (socket) => {
   }
 };
 
+const ipGameMap = {};
 
 io.on('connection', (socket) => {
 
   // give each socket a random identifier so that we can determine who is who when
   // we're sending messages back and forth!
   let id = socket.id;
-  let player_id = uuid();
   let room = "GameRoom"+Date.now();
+
+  //let socketClientIp = socket.handshake.address;
+  console.log(defaultRoom);
+  //ipGameMap[];
 
   socket.join(defaultRoom);
 
-  console.log(id)
+  //console.log(id)
 
-  io.to(id).emit('coneccion-made', {player_id,room});
+  io.to(id).emit('coneccion-made', {id,room});
   io.to(id).emit('game-found', {room:defaultRoom})
  
+  socket.on('update-position',params=>{
+    socket.to(params.room).emit('update-enemy-position', {x: params.x, y: params.y, z: params.z, ry: params.ry});
+  });
+
   socket.on('disconnect', () => {
     console.log('user disconnected');
   });
 
-  socket.on('update-position',params=>{
-    socket.to(params.room).emit('update-enemy-position', {x: params.x, y: params.y, z: params.z, ry: params.ry});
-  });
 });
 
 app.use( require('./routes/player.routes'));
 app.use( require('./routes/match.routes' ));
 
 app.get('/',(req,res)=>{
-  res.sendFile('index.html' );
+  res.sendFile('./dist/index.html' );
 });
 
-//        "build": "browserify src/main.js -o dist/bundle.js", "watch": "watchify src/main.js -o dist/bundle.js", AGREGAR A SCRIPTS MIENTRAS DESARROLLAS
+app.post('/crear-jugador', (req,res)=>{
+
+});
+
+//"build": "browserify src/main.js -o dist/bundle.js", "watch": "watchify src/main.js -o dist/bundle.js", AGREGAR A SCRIPTS MIENTRAS DESARROLLAS
 http.listen( process.env.PORT, () => {
   console.log(`listening on *:${process.env.PORT}`);
 });

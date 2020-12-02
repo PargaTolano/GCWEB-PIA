@@ -1,18 +1,19 @@
 const THREE = require('three');
 const {Behaviour} = require("./Behaviour");
 
+const {GameObject} = require('./../../GameObject');
+const {Bullet} = require('./Bullet');
+
 const { addCallback} = require('./../../Input/inputs');
 
 class Shooting extends Behaviour{
 
-    constructor( owner, cameraref, intersectableObjects){
+    constructor( owner, cameraref, intersectableObjects, gunmeshref, bulletBaseMesh, gamesceneref, sceneref){
         super(owner);
 
         let range = 2000;
         this.cameraref = cameraref;
         this.intersectableObjects = intersectableObjects;
-
-        console.log(this.intersectableObjects);
 
         let direction = new THREE.Vector3();
         this.cameraref.getWorldDirection(direction);
@@ -24,6 +25,11 @@ class Shooting extends Behaviour{
         this.firerate = 1/3;
         this.fireaccum = 0;
 
+        this.gunmeshref = gunmeshref;
+        this.bulletBaseMesh = bulletBaseMesh;
+        this.sceneref = sceneref;
+        this.gamesceneref = gamesceneref;
+
         this.mouseInputCallback = this.mouseInputCallback.bind(this);
         addCallback(this.mouseInputCallback);
     }
@@ -31,7 +37,6 @@ class Shooting extends Behaviour{
     mouseInputCallback(e){
         if(!this.fired){
 
-            console.log(this.intersectableObjects)
             let direction = new THREE.Vector3();
             this.cameraref.getWorldDirection(direction);
             direction.normalize();
@@ -40,10 +45,29 @@ class Shooting extends Behaviour{
             
             let arr = [];
             this.raycaster.intersectObjects ( this.intersectableObjects, true, arr );
+            if(arr.length > 0){
 
-            console.log('====================================');
-            console.log(arr[0].object.name);
-            console.log('====================================');
+                let bulletGO = new GameObject(this.gamesceneref);
+
+                this.gamesceneref.push(bulletGO);
+
+                let newBulletMesh = this.bulletBaseMesh.clone();
+                newBulletMesh.position.copy(this.gunmeshref.position);
+                let bulletComp  = new Bullet(
+                    bulletGO,
+                    newBulletMesh,
+                    arr[0].point.clone(),
+                    6000, //4000 para evitar fallos con el arreglo
+                    arr[0].distance,
+                    [this.intersectableObjects[this.intersectableObjects.length-1]],
+                    this.gamesceneref.length-1,
+                    this.gamesceneref,
+                    this.sceneref
+                );
+
+                bulletGO.addComponent(bulletComp);
+                this.sceneref.add(newBulletMesh);
+            }
 
             this.fired = true;
         }
