@@ -75,6 +75,11 @@ const leaveRooms = (socket) => {
 
 const ipGameMap = {};
 
+/*
+  "build": "browserify src/main.js -o dist/bundle.js", 
+  "watch": "watchify src/main.js -o dist/bundle.js"
+ */
+
 io.on('connection', (socket) => {
 
   // give each socket a random identifier so that we can determine who is who when
